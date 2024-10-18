@@ -29,6 +29,7 @@ Route::get('/login', function () {
     Route::middleware(['auth'])->group(function () {
     Route::get('/menu', [MenuController::class, 'index'])->name('menu');
     Route::post('/order', [OrderController::class, 'store'])->name('order.store');
+    Route::get('/orders/history', [OrderController::class, 'history'])->name('orders.history');
     Route::get('/cart', [OrderController::class, 'cart'])->name('cart');
     Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
     Route::post('/rate/{order}', [OrderController::class, 'rate'])->name('order.rate');
@@ -42,6 +43,18 @@ Route::get('/login', function () {
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::delete('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
     Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
     Route::post('/products/{product}/rate', [ProductController::class, 'rate'])->name('products.rate');
-Route::post('/products/{product}/like', [ProductController::class, 'like'])->name('products.like');
+    Route::post('/products/{product}/like', [ProductController::class, 'like'])->name('products.like');
+    Route::get('/search', [ProductController::class, 'search'])->name('products.search');
+    Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    });
+    Route::middleware(['auth'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+
+    Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    });
 });

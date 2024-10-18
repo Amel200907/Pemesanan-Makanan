@@ -41,4 +41,10 @@ class OrderController extends Controller
         $order->update(['rating' => $request->rating]);
         return back()->with('success', 'Thank you for your rating!');
     }
+    public function history()
+    {
+        $orders = auth()->user()->orders()->latest()->paginate(10);
+        return view('orders.history', compact('orders'));
+    }
+
 }
