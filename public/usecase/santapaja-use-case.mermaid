@@ -1,0 +1,30 @@
+graph TD
+    User((User))
+    Admin((Admin))
+    
+    Login[Login]
+    ViewMenu[View Menu]
+    AddToCart[Add to Cart]
+    Checkout[Checkout]
+    RateOrder[Rate Order]
+    ViewOrderHistory[View Order History]
+    
+    ManageRestaurant[Manage Restaurant]
+    ManageMenu[Manage Menu]
+    ManageOrders[Manage Orders]
+    AssignDelivery[Assign Delivery]
+    ViewReports[View Reports]
+    
+    User --> Login
+    User --> ViewMenu
+    User --> AddToCart
+    User --> Checkout
+    User --> RateOrder
+    User --> ViewOrderHistory
+    
+    Admin --> Login
+    Admin --> ManageRestaurant
+    Admin --> ManageMenu
+    Admin --> ManageOrders
+    Admin --> AssignDelivery
+    Admin --> ViewReports
