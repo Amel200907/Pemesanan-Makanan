@@ -1,46 +1,50 @@
-@extends('layouts.admin')
+@extends('layouts.app')
+
+@section('title', 'Dashboard')
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
-    
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-bold mb-2">Total Orders</h2>
-            <p class="text-3xl">{{ $totalOrders }}</p>
+    <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <h2 class="text-xl font-semibold">Total Pesanan</h2>
+            <p class="text-2xl font-bold">{{ $stats['total_orders'] }}</p>
         </div>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-bold mb-2">Total Products</h2>
-            <p class="text-3xl">{{ $totalProducts }}</p>
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <h2 class="text-xl font-semibold">Pesanan Tertunda</h2>
+            <p class="text-2xl font-bold">{{ $stats['pending_orders'] }}</p>
         </div>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-bold mb-2">Total Users</h2>
-            <p class="text-3xl">{{ $totalUsers }}</p>
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <h2 class="text-xl font-semibold">Total Produk</h2>
+            <p class="text-2xl font-bold">{{ $stats['total_products'] }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-4">
+            <h2 class="text-xl font-semibold">Total Pelanggan</h2>
+            <p class="text-2xl font-bold">{{ $stats['total_customers'] }}</p>
         </div>
     </div>
-    
-    <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-bold mb-4">Recent Orders</h2>
-        <table class="w-full">
-            <thead>
-                <tr>
-                    <th class="text-left">Order ID</th>
-                    <th class="text-left">User</th>
-                    <th class="text-left">Total</th>
-                    <th class="text-left">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($recentOrders as $order)
-                <tr>
-                    <td>{{ $order->id }}</td>
-                    <td>{{ $order->user->name }}</td>
-                    <td>Rp {{ number_format($order->total, 0, ',', '.') }}</td>
-                    <td>{{ ucfirst($order->status) }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+
+    <h2 class="text-2xl font-bold mt-8 mb-4">Pesanan Terbaru</h2>
+    <table class="min-w-full bg-white border border-gray-200">
+        <thead>
+            <tr>
+                <th class="py-2 border-b">ID Pesanan</th>
+                <th class="py-2 border-b">Pelanggan</th>
+                <th class="py-2 border-b">Status</th>
+                <th class="py-2 border-b">Tanggal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($recent_orders as $order)
+            <tr>
+                <td class="py-2 border-b">{{ $order->id }}</td>
+                <td class="py-2 border-b">{{ $order->user->name }}</td>
+                <td class="py-2 border-b">{{ ucfirst($order->status) }}</td>
+                <td class="py-2 border-b">{{ $order->created_at->format('d/m/Y H:i') }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
 @endsection

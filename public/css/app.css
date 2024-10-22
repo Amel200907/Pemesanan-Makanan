@@ -1,0 +1,8 @@
+.logo {
+    max-width: 50%; /* Mengurangi lebar maksimum logo */
+    height: auto; /* Menjaga proporsi gambar */
+    margin-bottom: 0.25rem; /* Mengurangi jarak di bawah logo */
+    display: block; /* Agar bisa mengatur margin dengan lebih baik */
+    margin-left: auto; /* Rata tengah */
+    margin-right: auto; /* Rata tengah */
+}

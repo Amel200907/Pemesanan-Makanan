@@ -18,10 +18,9 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->decimal('price', 10, 2);
-            $table->string('image');
-            $table->integer('likes')->default(0);
-            $table->decimal('rating', 3, 2)->default(0);
-            $table->integer('rating_count')->default(0);
+            $table->string('category');
+            $table->string('image')->nullable();
+            $table->boolean('is_available')->default(true);
             $table->timestamps();
         });
     }

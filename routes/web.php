@@ -2,59 +2,41 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MenuController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Customer\MenuController;
+use App\Http\Controllers\Customer\CartController;
+use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
+use App\Http\Controllers\ReviewController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+// Authentication Routes
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login.form');
-    Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login'])->name('login');
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    
-
-    Route::middleware(['auth'])->group(function () {
-    Route::get('/menu', [MenuController::class, 'index'])->name('menu');
-    Route::post('/order', [OrderController::class, 'store'])->name('order.store');
-    Route::get('/orders/history', [OrderController::class, 'history'])->name('orders.history');
-    Route::get('/cart', [OrderController::class, 'cart'])->name('cart');
-    Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
-    Route::post('/rate/{order}', [OrderController::class, 'rate'])->name('order.rate');
+// Admin Routes
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('products', ProductController::class);
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status.update');
 });
 
-    Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::resource('products', AdminProductController::class);
-    Route::resource('orders', AdminOrderController::class);
-    Route::get('/cart', [CartController::class, 'index'])->name('cart');
-    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-    Route::delete('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
-    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
-    Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
-    Route::post('/products/{product}/rate', [ProductController::class, 'rate'])->name('products.rate');
-    Route::post('/products/{product}/like', [ProductController::class, 'like'])->name('products.like');
-    Route::get('/search', [ProductController::class, 'search'])->name('products.search');
-    Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    });
-    Route::middleware(['auth'])->group(function () {
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
-    Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-
+// Customer Routes
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::get('/menu', [MenuController::class, 'index'])->name('menu');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::delete('/cart/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::get('/orders', [CustomerOrderController::class, 'index'])->name('customer.orders.index');
+    Route::post('/orders', [CustomerOrderController::class, 'store'])->name('customer.orders.store');
+    Route::get('/orders/{order}', [CustomerOrderController::class, 'show'])->name('customer.orders.show');
     Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
-    });
+});
+
+// Public Routes
+Route::get('/', function () {
+    return redirect()->route('menu');
 });
