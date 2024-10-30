@@ -8,23 +8,49 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    //
+    /**
+     * Show the login form.
+     *
+     * @return \Illuminate\View\View
+     */
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
+    /**
+     * Handle a login request to the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        if (Auth::attempt($credentials)) {
-            return redirect()->intended('dashboard')->with('success', 'Login berhasil.');
+
+    if (Auth::attempt($request->only('email', 'password'))) {
+        $user = Auth::user();
+
+        if ($user->role == 'admin') {
+            return redirect()->route('admin.dashboard')->with('success', 'Login berhasil.');
+        } else {
+            return redirect()->route('menu.index')->with('success', 'Login berhasil.');
         }
-
-        return back()->with('error', 'Email atau password salah.');
     }
+    return back()->withErrors([
+        'email' => 'The provided credentials do not match our records.',
+    ])->onlyInput('email');
+}
 
+    /**
+     * Log the user out of the application.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function logout()
     {
         Auth::logout();

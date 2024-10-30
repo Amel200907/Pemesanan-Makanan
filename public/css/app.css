@@ -1,8 +1,20 @@
-.logo {
-    max-width: 50%; /* Mengurangi lebar maksimum logo */
-    height: auto; /* Menjaga proporsi gambar */
-    margin-bottom: 0.25rem; /* Mengurangi jarak di bawah logo */
-    display: block; /* Agar bisa mengatur margin dengan lebih baik */
-    margin-left: auto; /* Rata tengah */
-    margin-right: auto; /* Rata tengah */
+body {
+    background-image: url('/images/background.jpg'); /* Ganti dengan nama file gambar Anda */
+    background-size: cover; /* Agar gambar menutupi seluruh layar */
+    background-position: center; /* Posisikan gambar di tengah */
+    background-repeat: no-repeat; /* Tidak ulang gambar */
+    background-attachment: fixed; /* Agar gambar tetap saat scroll */
+}
+
+nav {
+    display: none; /* Menghilangkan navbar */
+}
+
+form {
+    background-color: rgba(255, 255, 255, 0); /* Membuat latar belakang form transparan */
+    padding: 0; /* Menghapus padding dari form */
+}
+
+h1 {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Tambahkan bayangan pada teks */
 }

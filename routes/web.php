@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
@@ -12,31 +13,41 @@ use App\Http\Controllers\ReviewController;
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-// Admin Routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('products', ProductController::class);
-    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
-    Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status.update');
+Route::prefix('auth')->group(function () {
+    Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
 });
 
-// Customer Routes
-Route::middleware(['auth', 'role:customer'])->group(function () {
+// Admin Routes - Protected by 'auth' and 'checkRole:admin' middleware
+Route::middleware(['auth', 'checkRole:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('products', ProductController::class);
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [AdminOrderController::class, 'index'])->name('index');
+        Route::get('/{order}', [AdminOrderController::class, 'show'])->name('show');
+        Route::patch('/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('status.update');
+    });
+});
+
+// Customer Routes - Protected by 'auth' and 'checkRole:customer' middleware
+Route::middleware(['auth', 'checkRole:customer'])->prefix('customer')->group(function () {
     Route::get('/menu', [MenuController::class, 'index'])->name('menu');
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-    Route::delete('/cart/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
-    Route::get('/orders', [CustomerOrderController::class, 'index'])->name('customer.orders.index');
-    Route::post('/orders', [CustomerOrderController::class, 'store'])->name('customer.orders.store');
-    Route::get('/orders/{order}', [CustomerOrderController::class, 'show'])->name('customer.orders.show');
+    Route::prefix('cart')->name('cart.')->group(function () {
+        Route::get('/', [CartController::class, 'index'])->name('index');
+        Route::post('/add', [CartController::class, 'add'])->name('add');
+        Route::delete('/{cartItem}', [CartController::class, 'remove'])->name('remove');
+    });
+    Route::prefix('orders')->name('orders.')->group(function () {
+        Route::get('/', [CustomerOrderController::class, 'index'])->name('index');
+        Route::post('/', [CustomerOrderController::class, 'store'])->name('store');
+        Route::get('/{order}', [CustomerOrderController::class, 'show'])->name('show');
+    });
     Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 });
 
 // Public Routes
 Route::get('/', function () {
-    return redirect()->route('menu');
-});
+    return redirect()->route('login');
+})->name('home');

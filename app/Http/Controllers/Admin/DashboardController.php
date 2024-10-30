@@ -20,12 +20,15 @@ class DashboardController extends Controller
             'total_customers' => User::where('role', 'customer')->count(),
         ];
 
-        $recent_orders = Order::with(['user', 'items'])
-            ->latest()
-            ->take(5)
-            ->get();
+        $recent_orders = Order::with(['user', 'items'])->latest()->take(5)->get();
 
         return view('admin.dashboard', compact('stats', 'recent_orders'));
     }
+    public function __construct()
+{
+    $this->middleware('auth');
+    $this->middleware('role:admin');
 }
+}
+
 

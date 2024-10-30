@@ -12,9 +12,19 @@ class MenuController extends Controller
     //
     public function index()
     {
-        $categories = Category::pluck('name');
-        $products = Product::with('reviews')->get()->groupBy('category.name');
+        $favoriteMenus = Menu::where('is_favorite', true)
+            ->take(3)
+            ->get();
 
-        return view('customer.menu', compact('categories', 'products'));
+        $newMenus = Menu::latest()
+            ->take(3)
+            ->get();
+
+        $categories = Menu::select('category')
+            ->selectRaw('count(*) as count')
+            ->groupBy('category')
+            ->get();
+
+        return view('menu.index', compact('favoriteMenus', 'newMenus', 'categories'));
     }
 }
