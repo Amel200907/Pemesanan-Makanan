@@ -36,6 +36,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
+    public function hasRole($role)
+    {
+    return $this->role === $role;
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

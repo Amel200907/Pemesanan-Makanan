@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->decimal('price', 8, 2);
+            $table->string('image_url')->nullable();
+            $table->string('category');
+            $table->boolean('is_favorite')->default(false);
             $table->timestamps();
         });
     }

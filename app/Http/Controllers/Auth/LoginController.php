@@ -38,7 +38,7 @@ class LoginController extends Controller
         if ($user->role == 'admin') {
             return redirect()->route('admin.dashboard')->with('success', 'Login berhasil.');
         } else {
-            return redirect()->route('menu.index')->with('success', 'Login berhasil.');
+            return redirect()->route('customer.menu')->with('success', 'Login berhasil.');
         }
     }
     return back()->withErrors([

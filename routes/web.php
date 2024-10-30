@@ -20,9 +20,8 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
 });
 
-// Admin Routes - Protected by 'auth' and 'checkRole:admin' middleware
 Route::middleware(['auth', 'checkRole:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');;
     Route::resource('products', ProductController::class);
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [AdminOrderController::class, 'index'])->name('index');
@@ -31,10 +30,9 @@ Route::middleware(['auth', 'checkRole:admin'])->prefix('admin')->group(function 
     });
 });
 
-// Customer Routes - Protected by 'auth' and 'checkRole:customer' middleware
 Route::middleware(['auth', 'checkRole:customer'])->prefix('customer')->group(function () {
-    Route::get('/menu', [MenuController::class, 'index'])->name('menu');
-    Route::prefix('cart')->name('cart.')->group(function () {
+        Route::get('/menu', [MenuController::class, 'index'])->name('customer.menu');
+        Route::prefix('cart')->name('cart.')->group(function () {
         Route::get('/', [CartController::class, 'index'])->name('index');
         Route::post('/add', [CartController::class, 'add'])->name('add');
         Route::delete('/{cartItem}', [CartController::class, 'remove'])->name('remove');

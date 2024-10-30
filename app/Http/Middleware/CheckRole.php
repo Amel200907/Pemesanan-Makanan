@@ -18,16 +18,17 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, string $role)
     {
-        // Memeriksa apakah pengguna telah login
+        
         if (!auth()->check()) {
             return redirect()->route('login')->with('error', 'You must be logged in to access this page.');
         }
 
-        // Memeriksa apakah pengguna memiliki role yang diinginkan
-        if (!auth()->user()->hasRole($role)) {
+       
+        if (auth()->user()->role !== $role) {
             Log::warning('Unauthorized access attempt by user ID: ' . auth()->id());
             
-            return redirect()->route('home')->with('error', 'Unauthorized access.');
+            return redirect()->route($role === 'admin' ? 'admin.dashboard' : 'menu')
+            ->with('error', 'Unauthorized access.');
         }
 
         return $next($request);
