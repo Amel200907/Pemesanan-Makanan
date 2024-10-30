@@ -21,7 +21,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'checkRole:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');;
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin');;
     Route::resource('products', ProductController::class);
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [AdminOrderController::class, 'index'])->name('index');
