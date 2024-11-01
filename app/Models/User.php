@@ -22,7 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // 'admin' atau 'customer' (tidak perlu jika menggunakan roles)
+        'level', // 'admin' atau 'customer' (tidak perlu jika menggunakan roles)
         'phone_number',
         'address',
     ];
@@ -36,9 +36,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
-    public function hasRole($role)
+    public function hasRole($level)
     {
-    return $this->role === $role;
+    return $this->level === $level;
     }
 
 

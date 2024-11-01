@@ -11,8 +11,8 @@ use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\ReviewController;
 
-// Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+// Authentication Routes
 Route::prefix('auth')->group(function () {
     Route::post('/login', [LoginController::class, 'login'])->name('login.post');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -21,7 +21,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'checkRole:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin');;
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.admin');
     Route::resource('products', ProductController::class);
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [AdminOrderController::class, 'index'])->name('index');
@@ -31,7 +31,7 @@ Route::middleware(['auth', 'checkRole:admin'])->prefix('admin')->group(function 
 });
 
 Route::middleware(['auth', 'checkRole:customer'])->prefix('customer')->group(function () {
-        Route::get('/menu', [MenuController::class, 'index'])->name('customer.menu');
+    Route::get('/menu', [MenuController::class, 'index'])->name('customer.menu');
         Route::prefix('cart')->name('cart.')->group(function () {
         Route::get('/', [CartController::class, 'index'])->name('index');
         Route::post('/add', [CartController::class, 'add'])->name('add');

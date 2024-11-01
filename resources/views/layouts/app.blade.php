@@ -82,7 +82,7 @@
     <aside class="fixed left-0 top-16 w-64 h-full bg-white shadow-lg transform -translate-x-full md:translate-x-0 transition-transform duration-200 ease-in-out z-40" id="sidebar">
         <nav class="mt-5 px-4">
             <div class="space-y-1">
-                <a href="{{ route('dashboard') }}" class="sidebar-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+            <a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i class="fas fa-home w-5"></i>
                     <span>Dashboard</span>
                 </a>
@@ -92,7 +92,7 @@
                     <span>Orders</span>
                 </a>
                 
-                <a href="{{ route('menu.index') }}" class="sidebar-link {{ request()->routeIs('menu.*') ? 'active' : '' }}">
+                <a href="{{ route('customer.menu') }}" class="sidebar-link {{ request()->routeIs('customer.menu') ? 'active' : '' }}">
                     <i class="fas fa-utensils w-5"></i>
                     <span>Menu</span>
                 </a>

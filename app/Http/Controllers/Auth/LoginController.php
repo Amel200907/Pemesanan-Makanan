@@ -26,24 +26,25 @@ class LoginController extends Controller
      */
     public function login(Request $request)
 {
+
     $request->validate([
         'email' => 'required|email',
         'password' => 'required',
     ]);
-
-
+    
+    
     if (Auth::attempt($request->only('email', 'password'))) {
         $user = Auth::user();
-
-        if ($user->role == 'admin') {
-            return redirect()->route('admin.dashboard')->with('success', 'Login berhasil.');
+        
+        if ($user->level == 'admin') {
+            // dd('berhasil', $user->level);
+            return redirect()->route('dashboard.admin')->with('success', 'Login berhasil.');
         } else {
             return redirect()->route('customer.menu')->with('success', 'Login berhasil.');
         }
     }
-    return back()->withErrors([
-        'email' => 'The provided credentials do not match our records.',
-    ])->onlyInput('email');
+    return back()->withErrors(['email' => 'Invalid credentials'])->onlyInput('email');
+
 }
 
     /**

@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             'name'=> 'Amelia',
             'email'=> 'septianaamelia60@gmail.com',
             'password'=> Hash::make('123'),
-            'role' => 'Admin',
+            'level' => 'Admin',
         ]);
         $this->call([
             // UserSeeder::class,
